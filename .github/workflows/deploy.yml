@@ -34,7 +34,9 @@ jobs:
       modules: ${{ steps.matrix.outputs.modules }}
     steps:
       - id: matrix
-        run: echo "modules=${{ inputs.modules || '[\"networking\",\"aks\",\"db\"]' }}" >> $GITHUB_OUTPUT
+        env:
+          INPUT_MODULES: ${{ inputs.modules || '["networking","aks","db"]' }}
+        run: echo "modules=$INPUT_MODULES" >> $GITHUB_OUTPUT
 
   deploy:
     name: Deploy / ${{ matrix.module }}
