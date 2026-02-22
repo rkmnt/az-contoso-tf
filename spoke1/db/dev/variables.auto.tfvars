@@ -3,11 +3,11 @@ location = "northeurope"
 
 databases = {
   db-contoso = {
-    db_admin_login        = "psqladmin"
-    postgresql_version    = "16"
-    db_sku_name           = "B_Standard_B1ms"
-    db_storage_mb         = 32768
-    db_storage_tier       = "P4"
+    db_admin_login     = "psqladmin"
+    postgresql_version = "16"
+    db_sku_name        = "B_Standard_B1ms"
+    db_storage_mb      = 32768
+    db_storage_tier    = "P4"
   }
 
   # db-contoso2 = {
