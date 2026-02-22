@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Copy this file to tf-spoke1.sh and fill in your values.
+# tf-spoke1.sh is gitignored and will never be committed.
+
+TF_STATE_RG="rg-terraform-state"
+TF_STATE_SA="tfstatecontoso"
+SUBSCRIPTION_NAME="<your-subscription-name>"
+
+SUBSCRIPTION_INFO=$(az account list --query "[?name=='${SUBSCRIPTION_NAME}'].{tenantId:tenantId,id:id}")
+SUBSCRIPTION_ID=$(echo ${SUBSCRIPTION_INFO} | jq ".[].id" | sed 's/"//g')
+TENANT_ID=$(echo ${SUBSCRIPTION_INFO} | jq ".[].tenantId" | sed 's/"//g')
+
+az account set --subscription "${SUBSCRIPTION_ID}"
+
+export ARM_ACCESS_KEY="$(az storage account keys list -g ${TF_STATE_RG} -n ${TF_STATE_SA} --subscription ${SUBSCRIPTION_ID} --query "[0].value" -o tsv)"
+export ARM_TENANT_ID=${TENANT_ID}
+export ARM_SUBSCRIPTION_ID=${SUBSCRIPTION_ID}
+
+export ARM_CLIENT_ID="<service-principal-client-id>"
+export ARM_CLIENT_SECRET="<service-principal-client-secret>"
