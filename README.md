@@ -192,10 +192,18 @@ tofu apply
 
 ## Test
 
+> Tests are always run **locally** — they work after both a local deploy and a CI/CD deploy.
+> Run `tofu init` first to connect to the remote state in Azure Blob Storage.
+
+```bash
+source env_files/tf-spoke1.sh
+```
+
 ### Verify AKS
 
 ```bash
 cd spoke1/aks/dev
+tofu init
 tofu output -json kubeconfigs | jq -r '.contoso' > ~/.kube/contoso-aks
 chmod 600 ~/.kube/contoso-aks
 export KUBECONFIG=~/.kube/contoso-aks
@@ -206,9 +214,12 @@ kubectl get pods -A
 ### Verify PostgreSQL is reachable from AKS
 
 ```bash
+cd spoke1/db/dev
+tofu init
+DB_HOST=$(tofu output -json postgresql_fqdns | jq -r '.["db-contoso"]')
+
 kubectl run psql-test --rm -it --image=postgres:16 -- \
-  psql "host=$(cd ../../db/dev && tofu output -json postgresql_fqdns | jq -r '.["db-contoso"]') \
-        port=5432 dbname=postgres user=psqladmin sslmode=require"
+  psql "host=$DB_HOST port=5432 dbname=postgres user=psqladmin sslmode=require"
 ```
 
 ### Verify NSG rules
