@@ -1,10 +1,6 @@
 name: Infrastructure Deploy
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
   workflow_dispatch:
     inputs:
       spoke:
@@ -74,4 +70,3 @@ jobs:
       - name: Apply
         working-directory: ${{ env.SPOKE }}/${{ matrix.module }}/${{ env.ENVIRONMENT }}
         run: terraform apply -auto-approve tfplan
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
