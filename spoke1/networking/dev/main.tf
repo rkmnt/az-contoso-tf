@@ -1,13 +1,13 @@
 module "networking" {
   source = "../../../modules/networking/v01"
 
-  env                    = var.env
-  this_name              = "spoke1"
-  location               = var.location
-  vnet_address_space     = var.vnet_address_space
-  vnet_dns_server        = var.vnet_dns_server
-  subnets                = var.subnets
-  common_tags            = var.common_tags
+  env                = var.env
+  this_name          = "spoke1"
+  location           = var.location
+  vnet_address_space = var.vnet_address_space
+  vnet_dns_server    = var.vnet_dns_server
+  subnets            = var.subnets
+  common_tags        = var.common_tags
 }
 
 module "nsg_backend" {
