@@ -201,24 +201,30 @@ source env_files/tf-spoke1.sh
 
 ### Verify AKS
 
+In Azure Portal → **Kubernetes services → aks-dev-contoso → Connect** you will find the exact commands for your subscription. The equivalent CLI commands are:
+
 ```bash
-cd spoke1/aks/dev
-tofu init
-tofu output -json kubeconfigs | jq -r '.contoso' > ~/.kube/contoso-aks
-chmod 600 ~/.kube/contoso-aks
-export KUBECONFIG=~/.kube/contoso-aks
+az aks get-credentials \
+  --resource-group rg-dev-contoso \
+  --name aks-dev-contoso \
+  --overwrite-existing
+
 kubectl get nodes
 kubectl get pods -A
 ```
 
 ### Verify PostgreSQL is reachable from AKS
 
-```bash
-cd spoke1/db/dev
-tofu init
-DB_HOST=$(tofu output -json postgresql_fqdns | jq -r '.["db-contoso"]')
+PostgreSQL has `public_network_access_enabled = false` — it is only reachable from within the VNet. The test pod runs inside AKS (which is in the VNet) and uses the private DNS zone to resolve the hostname.
 
-kubectl run psql-test --rm -it --image=postgres:16 -- \
+```bash
+DB_HOST=$(az postgres flexible-server show \
+  --resource-group rg-dev-db-contoso \
+  --name psql-dev-db-contoso \
+  --query "fullyQualifiedDomainName" -o tsv)
+
+kubectl run psql-test --rm -it --image=postgres:16 \
+  --env="PGPASSWORD=<your-db-admin-password>" -- \
   psql "host=$DB_HOST port=5432 dbname=postgres user=psqladmin sslmode=require"
 ```
 
