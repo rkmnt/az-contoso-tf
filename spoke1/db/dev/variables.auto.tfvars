@@ -9,6 +9,7 @@ databases = {
     db_storage_mb         = 32768
     db_storage_tier       = "P4"
   }
+
   # db-contoso2 = {
   #   db_admin_login        = "psqladmin2"
   #   postgresql_version    = "16"
