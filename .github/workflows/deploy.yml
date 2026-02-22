@@ -29,7 +29,7 @@ env:
 jobs:
   setup:
     name: Setup matrix
-    runs-on: github-runner-personal
+    runs-on: [self-hosted, Linux, X64]
     outputs:
       modules: ${{ steps.matrix.outputs.modules }}
     steps:
@@ -38,7 +38,7 @@ jobs:
 
   deploy:
     name: Deploy / ${{ matrix.module }}
-    runs-on: github-runner-personal
+    runs-on: [self-hosted, Linux, X64]
     needs: setup
     strategy:
       matrix:

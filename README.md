@@ -103,7 +103,7 @@ cp env_files/tf-spoke1.sh.example env_files/tf-spoke1.sh
 
 ## CI/CD — GitHub Actions
 
-The workflow `.github/workflows/deploy.yml` runs automatically on every push/PR and can be triggered manually for any spoke and environment.
+The workflow `.github/workflows/deploy.yml` is triggered manually via **Actions → Run workflow** in GitHub.
 
 ### Pipeline flow
 
@@ -116,10 +116,6 @@ aks (plan → apply)
         ↓
 db (plan → apply)
 ```
-
-- **Pull Request** → runs `validate` + `plan` only (no apply)
-- **Push to main** → runs full pipeline including `apply`
-- **Manual dispatch** → choose spoke, environment and modules to deploy
 
 ### Manual dispatch inputs
 
