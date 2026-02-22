@@ -38,8 +38,8 @@ jobs:
           INPUT_MODULES: ${{ inputs.modules || '["networking","aks","db"]' }}
         run: echo "modules=$INPUT_MODULES" >> $GITHUB_OUTPUT
 
-  deploy:
-    name: Deploy / ${{ matrix.module }}
+  plan:
+    name: Plan / ${{ matrix.module }}
     runs-on: [self-hosted, Linux, X64]
     needs: setup
     strategy:
@@ -68,6 +68,39 @@ jobs:
       - name: Plan
         working-directory: ${{ env.SPOKE }}/${{ matrix.module }}/${{ env.ENVIRONMENT }}
         run: terraform plan -out=tfplan
+
+      - name: Upload plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan-${{ env.SPOKE }}-${{ matrix.module }}-${{ env.ENVIRONMENT }}
+          path: ${{ env.SPOKE }}/${{ matrix.module }}/${{ env.ENVIRONMENT }}/tfplan
+
+  apply:
+    name: Apply / ${{ matrix.module }}
+    runs-on: [self-hosted, Linux, X64]
+    needs: [setup, plan]
+    environment: production
+    strategy:
+      matrix:
+        module: ${{ fromJson(needs.setup.outputs.modules) }}
+      max-parallel: 1
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: Download plan
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan-${{ env.SPOKE }}-${{ matrix.module }}-${{ env.ENVIRONMENT }}
+          path: ${{ env.SPOKE }}/${{ matrix.module }}/${{ env.ENVIRONMENT }}
+
+      - name: Init
+        working-directory: ${{ env.SPOKE }}/${{ matrix.module }}/${{ env.ENVIRONMENT }}
+        run: terraform init
 
       - name: Apply
         working-directory: ${{ env.SPOKE }}/${{ matrix.module }}/${{ env.ENVIRONMENT }}
