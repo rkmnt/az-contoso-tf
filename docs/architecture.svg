@@ -1,91 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" font-family="Segoe UI, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 730" font-family="Segoe UI, Arial, sans-serif">
 
-  <!-- Background -->
-  <rect width="960" height="640" fill="#f0f2f5"/>
-
-  <!-- Title -->
-  <text x="480" y="38" text-anchor="middle" font-size="18" font-weight="bold" fill="#1a1a2e">Contoso – Hub-and-Spoke Architecture (Spoke 1)</text>
-
-  <!-- Internet -->
-  <rect x="400" y="55" width="160" height="44" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
-  <text x="480" y="82" text-anchor="middle" font-size="13" font-weight="bold" fill="#1d4ed8">Internet</text>
-
-  <!-- Arrow: Internet → App Gateway -->
-  <line x1="480" y1="99" x2="480" y2="128" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
-
-  <!-- Hub VNet (dashed, conceptual) -->
-  <rect x="30" y="108" width="190" height="72" rx="8" fill="#f3f4f6" stroke="#9ca3af" stroke-width="2" stroke-dasharray="8,4"/>
-  <text x="125" y="138" text-anchor="middle" font-size="12" font-weight="bold" fill="#9ca3af">Hub VNet</text>
-  <text x="125" y="156" text-anchor="middle" font-size="10" fill="#9ca3af">VPN / ExpressRoute</text>
-  <text x="125" y="172" text-anchor="middle" font-size="10" fill="#9ca3af">(future – not deployed)</text>
-
-  <!-- Peering arrow -->
-  <line x1="220" y1="155" x2="280" y2="220" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="6,4"/>
-  <text x="225" y="195" font-size="10" fill="#9ca3af">peering</text>
-
-  <!-- Spoke1 VNet box -->
-  <rect x="270" y="130" width="660" height="478" rx="14" fill="#fffbeb" stroke="#f59e0b" stroke-width="2.5"/>
-  <text x="310" y="158" font-size="13" font-weight="bold" fill="#92400e">Spoke 1 VNet — vnet-dev-spoke1  (10.1.0.0/16)</text>
-
-  <!-- Frontend subnet (future) -->
-  <rect x="290" y="168" width="620" height="62" rx="8" fill="#fce7f3" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="6,3"/>
-  <text x="380" y="194" font-size="12" font-weight="bold" fill="#be185d">Frontend Subnet — 10.1.1.0/24  (future)</text>
-  <text x="380" y="214" font-size="11" fill="#db2777">Application Gateway v2 + WAF  ←  public ingress &amp; DDoS protection</text>
-
-  <!-- Arrow: Internet → Frontend -->
-  <line x1="480" y1="128" x2="480" y2="166" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrPink)"/>
-
-  <!-- Backend subnet -->
-  <rect x="290" y="246" width="620" height="110" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
-  <text x="380" y="272" font-size="12" font-weight="bold" fill="#14532d">Backend Subnet — snet-dev-backend  (10.1.2.0/24)</text>
-  <!-- NSG badge -->
-  <rect x="290" y="280" width="200" height="34" rx="6" fill="#bbf7d0" stroke="#16a34a" stroke-width="1"/>
-  <text x="300" y="294" font-size="10" font-weight="bold" fill="#14532d">NSG: nsg-dev-backend</text>
-  <text x="300" y="308" font-size="10" fill="#166534">IN: 443/80 Internet  |  OUT: 5432 → db</text>
-  <!-- AKS box -->
-  <rect x="650" y="256" width="240" height="88" rx="8" fill="#86efac" stroke="#15803d" stroke-width="1.5"/>
-  <text x="770" y="283" text-anchor="middle" font-size="13" font-weight="bold" fill="#14532d">AKS Cluster</text>
-  <text x="770" y="301" text-anchor="middle" font-size="11" fill="#14532d">aks-dev-contoso</text>
-  <text x="770" y="318" text-anchor="middle" font-size="10" fill="#166534">Standard_B2s · 1 node</text>
-  <text x="770" y="334" text-anchor="middle" font-size="10" fill="#166534">Azure CNI · azure network policy</text>
-
-  <!-- Arrow: Frontend → Backend -->
-  <line x1="480" y1="230" x2="480" y2="244" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
-
-  <!-- Arrow: Backend → DB -->
-  <line x1="770" y1="344" x2="770" y2="392" stroke="#16a34a" stroke-width="2" marker-end="url(#arrGreen)"/>
-  <text x="778" y="372" font-size="10" fill="#15803d">5432</text>
-
-  <!-- DB subnet -->
-  <rect x="290" y="392" width="620" height="110" rx="8" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
-  <text x="380" y="418" font-size="12" font-weight="bold" fill="#1e3a8a">DB Subnet — snet-dev-db  (10.1.3.0/24)</text>
-  <!-- NSG badge -->
-  <rect x="290" y="426" width="200" height="34" rx="6" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="1"/>
-  <text x="300" y="440" font-size="10" font-weight="bold" fill="#1e3a8a">NSG: nsg-dev-db</text>
-  <text x="300" y="454" font-size="10" fill="#1e40af">IN: 5432 from backend only  |  DENY all</text>
-  <!-- PostgreSQL box -->
-  <rect x="650" y="400" width="240" height="90" rx="8" fill="#93c5fd" stroke="#1d4ed8" stroke-width="1.5"/>
-  <text x="770" y="428" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e3a8a">PostgreSQL Flexible</text>
-  <text x="770" y="446" text-anchor="middle" font-size="11" fill="#1e3a8a">psql-dev-db-contoso</text>
-  <text x="770" y="463" text-anchor="middle" font-size="10" fill="#1e40af">B_Standard_B1ms · port 5432</text>
-  <text x="770" y="479" text-anchor="middle" font-size="10" fill="#1e40af">Delegated subnet · Private DNS</text>
-
-  <!-- Private DNS zone -->
-  <rect x="290" y="520" width="620" height="50" rx="8" fill="#f3e8ff" stroke="#7c3aed" stroke-width="1.5"/>
-  <text x="600" y="542" text-anchor="middle" font-size="12" font-weight="bold" fill="#5b21b6">Private DNS Zone</text>
-  <text x="600" y="560" text-anchor="middle" font-size="11" fill="#6d28d9">contoso.private.postgres.database.azure.com  →  linked to vnet-dev-spoke1</text>
-
-  <!-- Terraform state note -->
-  <rect x="30" y="580" width="250" height="42" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1"/>
-  <text x="155" y="597" text-anchor="middle" font-size="10" font-weight="bold" fill="#475569">Terraform State (Azure Blob)</text>
-  <text x="155" y="612" text-anchor="middle" font-size="10" fill="#64748b">tfstatecontoso / tfstate / spoke1/*</text>
-
-  <!-- Deploy order note -->
-  <rect x="700" y="580" width="240" height="42" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1"/>
-  <text x="820" y="597" text-anchor="middle" font-size="10" font-weight="bold" fill="#475569">Deploy Order</text>
-  <text x="820" y="612" text-anchor="middle" font-size="10" fill="#64748b">1. networking  →  2. aks + db (parallel)</text>
-
-  <!-- Arrowhead definitions -->
   <defs>
     <marker id="arr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
       <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
@@ -94,8 +8,145 @@
       <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/>
     </marker>
     <marker id="arrPink" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#ec4899"/>
+      <polygon points="0 0, 10 3.5, 0 7" fill="#db2777"/>
+    </marker>
+    <marker id="arrYellow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ca8a04"/>
     </marker>
   </defs>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- 1. RECTS — back to front                               -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+
+  <!-- Background -->
+  <rect width="960" height="730" fill="#f0f2f5"/>
+
+  <!-- Internet -->
+  <rect x="400" y="52" width="160" height="44" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+
+  <!-- Hub VNet (future, dashed) -->
+  <rect x="30" y="108" width="190" height="80" rx="8" fill="#f3f4f6" stroke="#9ca3af" stroke-width="2" stroke-dasharray="8,4"/>
+
+  <!-- Spoke1 VNet -->
+  <rect x="268" y="122" width="664" height="500" rx="14" fill="#fffbeb" stroke="#f59e0b" stroke-width="2.5"/>
+
+  <!-- Frontend subnet (future, dashed) -->
+  <rect x="288" y="148" width="624" height="68" rx="8" fill="#fce7f3" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="6,3"/>
+
+  <!-- Backend subnet -->
+  <rect x="288" y="232" width="624" height="136" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+
+  <!-- Backend NSG badge -->
+  <rect x="294" y="268" width="210" height="50" rx="6" fill="#bbf7d0" stroke="#16a34a" stroke-width="1"/>
+
+  <!-- AKS box -->
+  <rect x="646" y="242" width="236" height="114" rx="8" fill="#86efac" stroke="#15803d" stroke-width="1.5"/>
+
+  <!-- DB subnet -->
+  <rect x="288" y="384" width="624" height="136" rx="8" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+
+  <!-- DB NSG badge -->
+  <rect x="294" y="420" width="210" height="50" rx="6" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="1"/>
+
+  <!-- PostgreSQL box -->
+  <rect x="646" y="392" width="236" height="118" rx="8" fill="#93c5fd" stroke="#1d4ed8" stroke-width="1.5"/>
+
+  <!-- Private DNS zone -->
+  <rect x="288" y="536" width="624" height="54" rx="8" fill="#f3e8ff" stroke="#7c3aed" stroke-width="1.5"/>
+
+  <!-- Terraform State note -->
+  <rect x="30" y="644" width="218" height="48" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1"/>
+
+
+  <!-- Deploy Order note -->
+  <rect x="712" y="644" width="218" height="48" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1"/>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- 2. TEXT — drawn after rects so always readable         -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+
+  <!-- Title -->
+  <text x="480" y="35" text-anchor="middle" font-size="18" font-weight="bold" fill="#1a1a2e">Contoso – Hub-and-Spoke Architecture (Spoke 1)</text>
+
+  <!-- Internet label -->
+  <text x="480" y="79" text-anchor="middle" font-size="13" font-weight="bold" fill="#1d4ed8">Internet</text>
+
+  <!-- Hub VNet labels -->
+  <text x="125" y="140" text-anchor="middle" font-size="12" font-weight="bold" fill="#9ca3af">Hub VNet</text>
+  <text x="125" y="158" text-anchor="middle" font-size="10" fill="#9ca3af">VPN / ExpressRoute</text>
+  <text x="125" y="175" text-anchor="middle" font-size="10" fill="#9ca3af">(future – not deployed)</text>
+
+  <!-- Spoke1 VNet label -->
+  <text x="308" y="148" font-size="13" font-weight="bold" fill="#92400e">Spoke 1 VNet — vnet-dev-spoke1  (10.1.0.0/16)</text>
+
+  <!-- Frontend subnet labels -->
+  <text x="378" y="175" font-size="12" font-weight="bold" fill="#be185d">Frontend Subnet — 10.1.1.0/24  (future)</text>
+  <text x="378" y="205" font-size="11" fill="#db2777">Application Gateway v2 + WAF  ←  public ingress &amp; DDoS protection</text>
+
+  <!-- Backend subnet label -->
+  <text x="378" y="258" font-size="12" font-weight="bold" fill="#14532d">Backend Subnet — snet-dev-backend  (10.1.2.0/24)</text>
+
+  <!-- Backend NSG badge text -->
+  <text x="304" y="285" font-size="10" font-weight="bold" fill="#14532d">NSG: nsg-dev-backend</text>
+  <text x="304" y="302" font-size="10" fill="#166534">IN: 443, 80 Internet</text>
+  <text x="304" y="313" font-size="10" fill="#166534">OUT: 5432 → db subnet</text>
+
+  <!-- AKS box text -->
+  <text x="764" y="272" text-anchor="middle" font-size="13" font-weight="bold" fill="#14532d">AKS Cluster</text>
+  <text x="764" y="291" text-anchor="middle" font-size="11" fill="#14532d">aks-dev-contoso</text>
+  <text x="764" y="309" text-anchor="middle" font-size="10" fill="#166534">Standard_B2s · 1 node</text>
+  <text x="764" y="324" text-anchor="middle" font-size="10" fill="#166534">Azure CNI</text>
+  <text x="764" y="339" text-anchor="middle" font-size="10" fill="#166534">azure network policy</text>
+
+  <!-- DB subnet label -->
+  <text x="378" y="410" font-size="12" font-weight="bold" fill="#1e3a8a">DB Subnet — snet-dev-db  (10.1.3.0/24)</text>
+
+  <!-- DB NSG badge text -->
+  <text x="304" y="437" font-size="10" font-weight="bold" fill="#1e3a8a">NSG: nsg-dev-db</text>
+  <text x="304" y="454" font-size="10" fill="#1e40af">IN: 5432 from backend only</text>
+  <text x="304" y="465" font-size="10" fill="#1e40af">IN: DENY all others</text>
+
+  <!-- PostgreSQL box text -->
+  <text x="764" y="422" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e3a8a">PostgreSQL Flexible</text>
+  <text x="764" y="441" text-anchor="middle" font-size="11" fill="#1e3a8a">psql-dev-db-contoso</text>
+  <text x="764" y="459" text-anchor="middle" font-size="10" fill="#1e40af">B_Standard_B1ms · 5432</text>
+  <text x="764" y="475" text-anchor="middle" font-size="10" fill="#1e40af">Delegated subnet</text>
+  <text x="764" y="490" text-anchor="middle" font-size="10" fill="#1e40af">Private DNS</text>
+
+  <!-- Private DNS zone text -->
+  <text x="600" y="558" text-anchor="middle" font-size="12" font-weight="bold" fill="#5b21b6">Private DNS Zone</text>
+  <text x="600" y="576" text-anchor="middle" font-size="11" fill="#6d28d9">contoso.private.postgres.database.azure.com  →  linked to vnet-dev-spoke1</text>
+
+  <!-- Terraform State text -->
+  <text x="139" y="663" text-anchor="middle" font-size="10" font-weight="bold" fill="#475569">Terraform State (Azure Blob)</text>
+  <text x="139" y="679" text-anchor="middle" font-size="10" fill="#64748b">tfstatecontoso / tfstate / spoke1/*</text>
+
+  <!-- Deploy Order text -->
+  <text x="821" y="663" text-anchor="middle" font-size="10" font-weight="bold" fill="#475569">Deploy Order</text>
+  <text x="821" y="679" text-anchor="middle" font-size="10" fill="#64748b">1. networking → 2. aks → 3. db</text>
+
+  <!-- peering label -->
+  <text x="194" y="194" font-size="10" fill="#9ca3af">peering</text>
+
+  <!-- 5432 label on Backend→DB arrow -->
+  <text x="782" y="368" font-size="10" fill="#15803d">5432</text>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- 3. ARROWS — drawn last, always visible on top          -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+
+  <!-- Internet → Frontend (dashed pink) -->
+  <line x1="480" y1="96" x2="480" y2="146" stroke="#db2777" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrPink)"/>
+
+  <!-- Peering (dashed gray) -->
+  <line x1="220" y1="158" x2="280" y2="214" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arr)"/>
+
+  <!-- Frontend → Backend (gray) -->
+  <line x1="480" y1="218" x2="480" y2="230" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- Backend → DB (green) -->
+  <line x1="764" y1="358" x2="764" y2="382" stroke="#16a34a" stroke-width="2" marker-end="url(#arrGreen)"/>
+
 
 </svg>

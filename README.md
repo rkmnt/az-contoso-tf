@@ -26,6 +26,26 @@ Terraform infrastructure for a Contoso enterprise demo deploying AKS and Postgre
 
 ---
 
+## Repository Structure
+
+```
+modules/
+  aks/v01/              # AKS module
+  database/v01/         # PostgreSQL Flexible Server module
+  networking/v01/       # VNet, subnets, Network Watcher
+  networking/nsg/v01/   # NSG module
+
+spoke1/
+  networking/dev/       # VNet + NSGs + Network Watcher for dev
+  aks/dev/              # AKS cluster for dev
+  db/dev/               # PostgreSQL for dev
+
+env_files/              # Local credential scripts (gitignored)
+.github/workflows/      # CI/CD pipeline
+```
+
+---
+
 ## Prerequisites
 
 - [Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.5 or [OpenTofu](https://opentofu.org/docs/intro/install/) >= 1.5 (commands below use `tofu`, replace with `terraform` if needed)
@@ -83,7 +103,7 @@ cp env_files/tf-spoke1.sh.example env_files/tf-spoke1.sh
 
 ## CI/CD — GitHub Actions
 
-The workflow `.github/workflows/deploy.yml` runs automatically on every push/PR and can be triggered manually for any spoke.
+The workflow `.github/workflows/deploy.yml` runs automatically on every push/PR and can be triggered manually for any spoke and environment.
 
 ### Pipeline flow
 
@@ -92,12 +112,22 @@ validate (fmt + tofu validate)
         ↓
 networking (plan → apply)
         ↓
-aks (plan → apply)    db (plan → apply)   ← parallel
+aks (plan → apply)
+        ↓
+db (plan → apply)
 ```
 
 - **Pull Request** → runs `validate` + `plan` only (no apply)
 - **Push to main** → runs full pipeline including `apply`
-- **Manual dispatch** → choose which spoke to deploy (default: `spoke1`)
+- **Manual dispatch** → choose spoke, environment and modules to deploy
+
+### Manual dispatch inputs
+
+| Input | Default | Description |
+|---|---|---|
+| `spoke` | `spoke1` | Which spoke to deploy |
+| `environment` | `dev` | Target environment (dev, prod, …) |
+| `modules` | `["networking","aks","db"]` | Ordered list of modules to deploy |
 
 ### GitHub Secrets
 
@@ -141,21 +171,23 @@ export TF_VAR_db_admin_password="<your-strong-password>"
 ### 3. Deploy networking (VNet, subnets, NSGs)
 
 ```bash
-cd spoke1/networking
+cd spoke1/networking/dev
 tofu init
 tofu apply
 ```
 
-### 4. Deploy AKS and PostgreSQL (can run in parallel)
+### 4. Deploy AKS
 
 ```bash
-# AKS
-cd spoke1/aks
+cd spoke1/aks/dev
 tofu init
 tofu apply
+```
 
-# PostgreSQL (separate terminal)
-cd spoke1/db
+### 5. Deploy PostgreSQL
+
+```bash
+cd spoke1/db/dev
 tofu init
 tofu apply
 ```
@@ -167,7 +199,7 @@ tofu apply
 ### Verify AKS
 
 ```bash
-cd spoke1/aks
+cd spoke1/aks/dev
 tofu output -json kubeconfigs | jq -r '.contoso' > ~/.kube/contoso-aks
 chmod 600 ~/.kube/contoso-aks
 export KUBECONFIG=~/.kube/contoso-aks
@@ -178,9 +210,8 @@ kubectl get pods -A
 ### Verify PostgreSQL is reachable from AKS
 
 ```bash
-# Deploy a test pod and connect to PostgreSQL
 kubectl run psql-test --rm -it --image=postgres:16 -- \
-  psql "host=$(cd ../db && tofu output -json postgresql_fqdns | jq -r '.["db-contoso"]') \
+  psql "host=$(cd ../../db/dev && tofu output -json postgresql_fqdns | jq -r '.["db-contoso"]') \
         port=5432 dbname=postgres user=psqladmin sslmode=require"
 ```
 
@@ -206,9 +237,9 @@ az network nsg show \
 
 ```bash
 # Destroy in reverse order
-cd spoke1/db && tofu destroy
-cd spoke1/aks && tofu destroy
-cd spoke1/networking && tofu destroy
+cd spoke1/db/dev && tofu destroy
+cd spoke1/aks/dev && tofu destroy
+cd spoke1/networking/dev && tofu destroy
 ```
 
 ---
