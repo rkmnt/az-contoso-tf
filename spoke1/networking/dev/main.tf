@@ -1,5 +1,5 @@
 module "networking" {
-  source = "../../modules/networking"
+  source = "../../../modules/networking/v01"
 
   env                = var.env
   this_name          = "spoke1"
@@ -11,7 +11,7 @@ module "networking" {
 }
 
 module "nsg_backend" {
-  source = "../../modules/networking/nsg"
+  source = "../../../modules/networking/nsg/v01"
 
   env                 = var.env
   this_name           = "backend"
@@ -22,7 +22,7 @@ module "nsg_backend" {
 }
 
 module "nsg_db" {
-  source = "../../modules/networking/nsg"
+  source = "../../../modules/networking/nsg/v01"
 
   env                 = var.env
   this_name           = "db"

@@ -1,6 +1,6 @@
 module "database" {
   for_each = var.databases
-  source   = "../../modules/database"
+  source   = "../../../modules/database/v01"
 
   env                    = var.env
   this_name              = each.key

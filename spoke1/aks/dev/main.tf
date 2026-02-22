@@ -1,6 +1,6 @@
 module "aks" {
   for_each = var.aks_clusters
-  source   = "../../modules/aks"
+  source   = "../../../modules/aks/v01"
 
   env                = var.env
   this_name          = each.key
