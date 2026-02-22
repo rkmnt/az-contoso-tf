@@ -11,7 +11,7 @@ module "database" {
   sku_name               = each.value.db_sku_name
   storage_mb             = each.value.db_storage_mb
   storage_tier           = each.value.db_storage_tier
-  private_dns_zone_name  = each.value.private_dns_zone_name
+  private_dns_zone_name  = "cnts-${var.env}.private.postgres.database.azure.com"
   vnet_id                = data.terraform_remote_state.networking.outputs.vnet_id
   delegated_subnet_id    = data.terraform_remote_state.networking.outputs.subnet_ids["db"]
   common_tags            = var.common_tags

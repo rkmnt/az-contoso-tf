@@ -36,7 +36,7 @@ modules/
   networking/nsg/v01/   # NSG module
 
 spoke1/
-  networking/dev/       # VNet + NSGs + Network Watcher for dev
+  networking/dev/       # VNet + NSGs
   aks/dev/              # AKS cluster for dev
   db/dev/               # PostgreSQL for dev
 
